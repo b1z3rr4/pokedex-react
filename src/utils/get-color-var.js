@@ -1,3 +1,6 @@
+/**
+ * @type {Record<ColorToken, string>}
+ */
 const COLOR_VARS = {
     accent: "var(--accent)",
     normal: "var(--type-normal)",
@@ -17,6 +20,12 @@ const COLOR_VARS = {
     dragon: "var(--type-dragon)",
 };
 
+/**
+ * Resolve um {@link ColorToken} para a variável CSS correspondente.
+ *
+ * @param {ColorToken} color
+ * @returns {string}
+ */
 export function getColorVar(color) {
     return COLOR_VARS[color];
 }
