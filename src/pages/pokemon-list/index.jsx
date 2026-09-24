@@ -7,5 +7,24 @@ import { getPokemonStat } from "@/utils/get-pokemon-stat";
 import { useState } from "react";
 
 export function PokemonList() {
- 
+  return (
+    <div className="pokemon-list-root">
+      <main className="pokemon-list-main">
+        <div className="pokemon-list-grid">
+          {pokemons.map((pokemon) => (
+            <PokemonCard
+              key={pokemon.id}
+              id={pokemon.id}
+              name={pokemon.name}
+              sprite={pokemon.sprites.front_default}
+              types={pokemon.types.map((t) => t.type.name)}
+              hp={getPokemonStat(pokemon, "hp")}
+              atk={getPokemonStat(pokemon, "attack")}
+              def={getPokemonStat(pokemon, "defense")}
+            />
+          ))}
+        </div>
+      </main>
+    </div>
+  );
 }
