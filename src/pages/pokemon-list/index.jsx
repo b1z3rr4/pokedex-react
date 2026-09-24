@@ -6,7 +6,9 @@ import { pokemons } from "@/mocks/pokemons";
 import { getPokemonStat } from "@/utils/get-pokemon-stat";
 import { useState } from "react";
 
-export function PokemonList() {
+export function PokemonList() {    
+  const [selectedPokemon, setSelectedPokemon] = useState(null); // Falsy -> false
+
   return (
     <div className="pokemon-list-root">
       <main className="pokemon-list-main">
@@ -21,10 +23,20 @@ export function PokemonList() {
               hp={getPokemonStat(pokemon, "hp")}
               atk={getPokemonStat(pokemon, "attack")}
               def={getPokemonStat(pokemon, "defense")}
+              onClick={() => setSelectedPokemon(pokemon)}
             />
           ))}
         </div>
       </main>
+
+      {selectedPokemon && (
+        <PokemonModal
+          pokemon={selectedPokemon}
+          onClose={() => {
+            setSelectedPokemon(null);
+          }}
+        />
+      )}
     </div>
   );
 }
