@@ -5,13 +5,17 @@ import { PokemonCard } from "@/components/modules/pokemon-card";
 import { getPokemonStat } from "@/utils/get-pokemon-stat";
 import { useState } from "react";
 import { useEffect } from "react";
-import { getPokemonList } from "@/services/get-pokemon-list";
-import { getPokemonByName } from "@/services/get-pokemon-by-name";
+import { Header } from "@/components/features/header";
+import { useMemo } from "react";
+import { useCallback } from "react";
+import { usePokemonList } from "@/queries/use-pokemon-list";
 
 const pokemonKey = "pokemonSelecionado"
 
 export function PokemonList() {    
-  const [pokemonList, setPokemonList] = useState([]);
+  const pokemonList = usePokemonList();
+  
+  const [selectedTypeFilter, setSelectedFilter] = useState('accent');
 
   const [selectedPokemon, setSelectedPokemon] = useState(() => {
     const pokemonStorage = localStorage.getItem(pokemonKey);
@@ -22,28 +26,29 @@ export function PokemonList() {
     return null;
   });
 
+  const pokemonListFiltered = useMemo(() => {
+    if (selectedTypeFilter === 'accent') return pokemonList;
+    
+    return pokemonList.filter((p) => {
+      return p.types.some((t) => t.type.name === selectedTypeFilter);
+    }) ?? [];
+  }, [pokemonList, selectedTypeFilter]);
+
+  const handleTypeFilter = useCallback((type) => {
+    setSelectedFilter(type);
+  }, [])
+
   useEffect(() => {
-    console.log('rodou o useEffect!');
     localStorage.setItem(pokemonKey, JSON.stringify(selectedPokemon));
   }, [selectedPokemon]);
 
-  useEffect(() => {
-    getPokemonList().then(({ results }) => {
-      return Promise.all(results.map(async (pokemon) => {
-          return getPokemonByName(pokemon.name);
-      }))
-    }).then((data) => {
-      setPokemonList(data);
-    })
-  }, []);
-
   return (
     <div className="pokemon-list-root">
-
-
+      <Header selectedType={selectedTypeFilter} onTypeChange={handleTypeFilter} />
+      
       <main className="pokemon-list-main">
         <div className="pokemon-list-grid">
-          {pokemonList?.map((pokemon) => ( // Optional Chain
+          {pokemonListFiltered?.map((pokemon) => ( // Optional Chain
             <PokemonCard
               key={pokemon.id}
               id={pokemon.id}

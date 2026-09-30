@@ -55,3 +55,16 @@
  * @property {PokemonStat[]} stats
  * @property {PokemonSprites} sprites
  */
+
+/**
+ * Geração de jogos Pokémon.
+ *
+ * GET /generation/{id or name}
+ *
+ * @typedef {Object} Generation
+ * @property {number} id
+ * @property {string} name
+ * @property {PokemonResource} main_region
+ * @property {PokemonResource[]} pokemon_species
+ * @property {PokemonResource[]} types
+ */
